@@ -9,7 +9,7 @@ class Task;
 /*
 Verwendung 
 ==========
-Arrange::getInstance ()->xyz ();
+Arrange::getInstance()->xyz();
 */
 
 class Arrange
