@@ -14,7 +14,7 @@ public:
 
 const static char CMD_END =';';
   
-  int getTag(){return _tag;}
+  byte getTag(){return _tag;}
   void setTag(byte tag){_tag = tag;}
 
   byte* getBytes(byte &length){

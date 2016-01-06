@@ -5,7 +5,7 @@ void Arrange::spin()
 {
 	for(std::list<Task*>::iterator it = _ongoingTasks.begin(); it !=_ongoingTasks.end(); it++)
     {
-      (*it)->run(millis());
+      		(*it)->run(millis());
     }
 }
 

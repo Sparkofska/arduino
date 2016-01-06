@@ -5,8 +5,8 @@
 void setup() {
 	pinMode(ledPin, OUTPUT);
 
-	Serial.begin(9600);
-	Serial.println("started");
+	//Serial.begin(9600);
+	//Serial.println("started");
 
 }
 

@@ -4,7 +4,7 @@
 #include "../framework/Continual.h"
 #include "OnDistanceCallable.h"
 
-#define V_SOUND 343 // Schallgeschwindigkeit in mm/ms Millimeter pro Millisekunde beo 20°C Raumtemperatur
+#define V_SOUND 343 // Schallgeschwindigkeit in mm/ms Millimeter pro Millisekunde bei 20°C Raumtemperatur
 
 class DistanceListener : public Continual
 {

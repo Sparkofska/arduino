@@ -6,38 +6,55 @@
 #include "utility.h"
 
 #include "../RPlib/util/Soundbank.h"
+
 #include "../RPlib/framework/Continual.h"
 #include "../RPlib/framework/Arrange.h"
 #include "../RPlib/framework/Arrange.cpp"
+
 #include "../RPlib/continuals/Blinker.h"
+
+#include "../RPlib/bluetooth/CommandReceiver.h"
+//#include "../RPlib/bluetooth/Command.h"
+#include "../RPlib/bluetooth/CommandExecutor.h"
+#include "RobertCommandExecutor.h"
+
 #include "../RPlib/distance/DistanceListener.h"
+#include "../RPlib/distance/DistancePrinter.h"
 #include "DistanceConsumer.h"
 
 //#include "../RPlib/Distance/DistancePrinter.h"
 //#include "../RPlib/util/FrequenzLogger.h"
 
-#define ledPin 13
+#define blinkPin 13
 
 #define motorA1pin 12
 #define motorA2pin 11	//PWM
 #define motorENApin 10 	//PWM
 #define motorENBpin 9 	//PWM
-#define mototrB1pin 8
+#define motorB1pin 8
 #define motorB2pin 7
+
 #define soundPin 6		//PWM
+
 #define xxx 5		//PWM
-#define xxx 4
+#define ledPin 4
+
 #define distanceTriggerPin 3		//PWM
-#define distanceSignalPin 2
+#define distanceEchoPin 2
+
 #define xxx 1 		//TX->
 #define xxx 0		//RX<-
 
-Blinker blinker(1, 500L, ledPin);
+Blinker blinker(1, 500L, blinkPin);
+
+RobertCommandExecutor cmdExe(ledPin);
+CommandReceiver receiver(2, 20L, &cmdExe);
 
 DistanceConsumer consumer(soundPin, 200L);
 //DistancePrinter p;
-DistanceListener distanceListener(2, 333L, distanceSignalPin, distanceTriggerPin, &consumer);
-//FrequenzLogger frequenzLogger(3, 1000L);
+DistanceListener distanceListener(3, 333L, distanceEchoPin, distanceTriggerPin, &consumer);
+
+//FrequenzLogger frequenzLogger(4, 1000L);
 
 void setup()
 {
@@ -45,7 +62,11 @@ void setup()
 
 	Arrange::getInstance()->registerTask(&blinker);
 	Arrange::getInstance()->registerTask(&distanceListener);
+	Arrange::getInstance()->registerTask(&receiver);
+
 	//Arrange::getInstance()->registerTask(&frequenzLogger);
+
+	Serial.write("setup finished");
 
 	pinMode(soundPin, OUTPUT);
 	Soundbank::soundStarted(soundPin);

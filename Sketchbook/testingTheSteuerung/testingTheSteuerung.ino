@@ -25,7 +25,7 @@
 #define b1pin 8
 #define b2pin 7
 
-#define soundPin 3 	//PWM
+#define soundPin 6 	//PWM
 
 // txPin 1
 // rxPin 0

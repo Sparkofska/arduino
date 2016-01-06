@@ -2,7 +2,9 @@
 #define COMMANDEXECUTOR_H
 
 #include "Command.h"
-
+/**
+* virtual class. Should be overridden for Executing specialized commands.
+*/
 class CommandExecutor
 {
 
