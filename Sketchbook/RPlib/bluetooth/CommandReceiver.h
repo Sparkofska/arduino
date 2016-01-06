@@ -35,6 +35,7 @@ protected:
           return;
         }
       }
+      Serial.print("Cmd was dismissed due to invalid syntax");
     }
   }
 
