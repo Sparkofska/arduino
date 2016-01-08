@@ -1,16 +1,16 @@
-#ifndef DISTANCECONSUMER_H
-#define DISTANCEBCONSUMER_H
+#ifndef ROBERTDISTANCECALLABLE_H
+#define ROBERTDISTANCECALLABLE_H
 
 #include "../RPlib/Distance/OnDistanceCallable.h"
 
-class DistanceConsumer : public OnDistanceCallable
+class RobertDistanceCallable : public OnDistanceCallable
 {
 private:
   byte _soundPin;
   unsigned long _dist;
   
 public:
-  DistanceConsumer(byte outpin, unsigned long distance)
+  RobertDistanceCallable(byte outpin, unsigned long distance)
     : _soundPin(outpin), _dist(distance)
   {
   	pinMode(outpin, OUTPUT);
@@ -24,4 +24,4 @@ public:
   }
 
 };
-#endif //DISTANCECONSUMER_H
+#endif //ROBERTDISTANCECALLABLE_H

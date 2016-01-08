@@ -58,6 +58,14 @@ static void soundBeep(byte outpin){
   delay(100);
 }
 
+static void soundStarting(byte outpin){
+  for(int i = FREQ_E4; i< FREQ_E4*4; i+=2)
+  {
+    tone(outpin, i);
+  }
+  noTone(outpin);
+}
+
 static void soundStarted(byte outpin){
   for(int i = FREQ_E4; i< FREQ_E4*4; i+=2)
   {

@@ -42,6 +42,9 @@ protected:
    Serial.print("Size of wchar_t : ");
    Serial.println(sizeof(wchar_t));
 
+   Serial.print("Size of Pointer : ");
+   Serial.println(sizeof(this));
+
   Serial.println("================================");
   Serial.println("");
 
