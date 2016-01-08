@@ -2,10 +2,11 @@
 #define MOTORDRIVER_H
 
 #include "../framework/Continual.h"
-#include "SpeedCalculator.h"
 
 class MotorDriver : public Continual
 {
+
+#define NUM_GRADATIONS 4
 
 private:
   byte _A1Pin;
@@ -15,85 +16,104 @@ private:
   byte _B2Pin;
   byte _enBPin; //needs to be PWM
 
-  SpeedCalculator *_speedcalc;
+  bool _turn;
 
-  const static int TRESHHOLD = 5; // below this Value motors wont drive
+  char _speedAindex; // char: because negative values are needed, too
+  char _speedBindex;
 
-  inline int absClamp255(int x)
+  void driveA()
   {
-    if(x < 0)   x = -x;
-    if(x > 255) x = 255;
-    return x;
-  }
-
-  inline void driveA(int speed)
-  {
-    if(speed > 0) // forward
+    if(_speedAindex == 0)
     {
-      analogWrite(_enAPin, absClamp255(speed));
+      analogWrite(_enAPin, 0);
+      digitalWrite(_A1Pin, LOW);
+      digitalWrite(_A2Pin, LOW);
+    }
+    else if(_speedBindex > 0) // forward
+    {
+      analogWrite(_enAPin, calcSpeed(_speedAindex));
       digitalWrite(_A1Pin, HIGH);
       digitalWrite(_A2Pin, LOW);
     }
     else //backward
     {
-      analogWrite(_enAPin, absClamp255(speed));
+      analogWrite(_enAPin, calcSpeed(_speedAindex));
       digitalWrite(_A1Pin, LOW);
       digitalWrite(_A2Pin, HIGH);
     }
   }
 
-  inline void stopA()
+  void driveB()
   {
-    analogWrite(_enAPin, 0);
-  }
-
-  inline void stopB()
-  {
-    analogWrite(_enBPin, 0);
-  }
-
-  inline void driveB(int speed)
-  {
-    if(speed > 0) // forward
+    if(_speedBindex == 0)
     {
-      analogWrite(_enBPin, absClamp255(speed));
+      analogWrite(_enBPin, 0);
+      digitalWrite(_B1Pin, LOW);
+      digitalWrite(_B2Pin, LOW);
+    }
+    else if(_speedBindex > 0) // forward
+    {
+      analogWrite(_enBPin, calcSpeed(_speedBindex));
       digitalWrite(_B1Pin, HIGH);
       digitalWrite(_B2Pin, LOW);
     }
     else //backward
     {
-      analogWrite(_enBPin, absClamp255(speed));
+      analogWrite(_enBPin, calcSpeed(_speedBindex));
       digitalWrite(_B1Pin, LOW);
       digitalWrite(_B2Pin, HIGH);
+    }
+  }
+
+  byte calcSpeed(char index)
+  {
+    Serial.print("calcSpeed called: i=");
+    Serial.println((int) index);
+
+    if(index < 0)
+      index = -index;
+
+    switch (index)
+    {
+      case 0:
+        return 220;
+       case 1:
+        return 230;
+       case 2:
+        return 240;
+       case 3:
+        return 250;
+       case 4:
+        return 255;
+      default:
+        return 0;
     }
   }
 
 protected:
   void work(long now)
   {
-    int a = _speedcalc->getASpeed();
-    int b = _speedcalc->getBSpeed();
+    if(_turn){
+      driveA();
+      driveB();
+    }
+    else{
+      driveB();
+      driveA();
+    }
 
-    if(a < TRESHHOLD && a > -TRESHHOLD)
-      stopA();
-    else
-      driveA(a);
-
-    if(b < TRESHHOLD && b > -TRESHHOLD)
-      stopB();
-    else
-      driveB(b);
+    _turn = !_turn;
   }
 
 public:
   /**
   * 
   */
-  MotorDriver(byte id, long pace, SpeedCalculator* speedcalc, byte A1Pin, byte A2Pin, byte enAPin, byte B1Pin, byte B2Pin, byte enBPin)
+  MotorDriver(byte id, long pace, byte A1Pin, byte A2Pin, byte enAPin, byte B1Pin, byte B2Pin, byte enBPin)
     : Continual(id, pace)
     , _A1Pin(A1Pin), _A2Pin(A2Pin), _enAPin(enAPin)
-    , _B1Pin(B1Pin), _B2Pin(B2Pin), _enBPin(enBPin)
-    , _speedcalc(speedcalc)
+    , _B1Pin(B1Pin), _B2Pin(B2Pin), _enBPin(enBPin),
+    _speedAindex(0), _speedBindex(0)
     {
       pinMode(_A1Pin, OUTPUT);
       pinMode(_A2Pin, OUTPUT);
@@ -101,19 +121,42 @@ public:
       pinMode(_B1Pin, OUTPUT);
       pinMode(_B2Pin, OUTPUT);
       pinMode(_enBPin, OUTPUT);
+
+      digitalWrite(_A1Pin, LOW);
+      digitalWrite(_A2Pin, LOW);
+      digitalWrite(_enAPin, LOW);
+      digitalWrite(_B1Pin, LOW);
+      digitalWrite(_B2Pin, LOW);
+      digitalWrite(_enBPin, LOW);
     };
 
     ~MotorDriver()
     {
-      delete _speedcalc;
     }
 
+    void increaseASpeed()
+    {
+      if(_speedAindex < NUM_GRADATIONS)
+        _speedAindex++;
+    }
 
-  void deactivate()
-  {
-    Continual::deactivate();
-  }
+    void decreaseASpeed()
+    {
+      if(_speedAindex > -NUM_GRADATIONS)
+        _speedAindex--;
+    }
 
+    void increaseBSpeed()
+    {
+      if(_speedBindex < NUM_GRADATIONS)
+        _speedBindex++;
+    }
+
+    void decreaseBSpeed()
+    {
+      if(_speedBindex > -NUM_GRADATIONS)
+        _speedBindex--;
+    }
 };
 
 

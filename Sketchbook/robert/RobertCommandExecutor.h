@@ -3,15 +3,16 @@
 
 #include "../RPlib/bluetooth/CommandExecutor.h"
 #include "../RPlib/bluetooth/Command.h"
-/**
-* virtual class. Should be overridden for Executing specialized commands.
-*/
+#include "../RPlib/motor/MotorDriver.h"
+
 class RobertCommandExecutor : public CommandExecutor
 {
 
 private:
 	byte _ledPin;
 	bool _ledState;
+
+  MotorDriver* _motordriver;
 
 	void testCmdByLed()
 	{
@@ -22,10 +23,11 @@ private:
 protected:
 
 public:
-  RobertCommandExecutor(byte ledPin):
+  RobertCommandExecutor(byte ledPin, MotorDriver* motordriver):
   	CommandExecutor(),
   	_ledPin(ledPin),
-  	_ledState(false)
+  	_ledState(false),
+    _motordriver(motordriver)
   { 
   	pinMode(_ledPin, OUTPUT);
   	digitalWrite(_ledPin, LOW);
@@ -37,6 +39,20 @@ public:
     	case 'g' :
     		testCmdByLed();
             break;
+
+      case 'a' :
+        _motordriver->increaseASpeed();
+            break;
+      case 's' :
+        _motordriver->decreaseASpeed();
+            break;
+      case 'b' :
+        _motordriver->increaseBSpeed();
+            break;
+      case 'n' :
+        _motordriver->decreaseBSpeed();
+            break;
+            
     	default:
     		Serial.write("Cmd not specified");
 	}

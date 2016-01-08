@@ -22,6 +22,8 @@
 #include "../RPlib/distance/DistancePrinter.h"
 #include "DistanceConsumer.h"
 
+#include "../RPlib/motor/MotorDriver.h"
+
 //#include "../RPlib/Distance/DistancePrinter.h"
 //#include "../RPlib/util/FrequenzLogger.h"
 
@@ -45,24 +47,35 @@
 #define xxx 1 		//TX->
 #define xxx 0		//RX<-
 
-Blinker blinker(1, 500L, blinkPin);
+#define xxx A0
+#define xxx A1 	//light Sensor?
+#define xxx A2 	//light?
+#define xxx A3
+#define xxx A4
+#define xxx A5
 
-RobertCommandExecutor cmdExe(ledPin);
-CommandReceiver receiver(2, 20L, &cmdExe);
+Blinker blinker(1, 500L, blinkPin);
 
 DistanceConsumer consumer(soundPin, 200L);
 //DistancePrinter p;
-DistanceListener distanceListener(3, 333L, distanceEchoPin, distanceTriggerPin, &consumer);
+DistanceListener distanceListener(2, 333L, distanceEchoPin, distanceTriggerPin, &consumer);
 
-//FrequenzLogger frequenzLogger(4, 1000L);
+MotorDriver motordriver(3, 100L, motorA1pin, motorA2pin, motorENApin, motorB1pin, motorB2pin, motorENBpin);
+
+RobertCommandExecutor cmdExe(ledPin, &motordriver);
+CommandReceiver receiver(4, 20L, &cmdExe);
+
+//FrequenzLogger frequenzLogger(5, 1000L);
 
 void setup()
 {
 	Serial.begin(9600);
 
 	Arrange::getInstance()->registerTask(&blinker);
-	Arrange::getInstance()->registerTask(&distanceListener);
+	//Arrange::getInstance()->registerTask(&distanceListener);
 	Arrange::getInstance()->registerTask(&receiver);
+
+	Arrange::getInstance()->registerTask(&motordriver);
 
 	//Arrange::getInstance()->registerTask(&frequenzLogger);
 
@@ -76,3 +89,4 @@ void loop()
 {
 	Arrange::getInstance()->spin();
 }
+
