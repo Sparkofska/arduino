@@ -10,6 +10,7 @@ public:
   { };
 
   virtual void onPress() = 0;
+  virtual void onRelease() = 0;
 
 };
 #endif //ONPRESSCALLABLE_H
