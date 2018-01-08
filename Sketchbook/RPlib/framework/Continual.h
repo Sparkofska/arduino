@@ -8,25 +8,25 @@ class Continual : public Task
 {
 
 private:
-  long _pace; //time between executions
-  long _lastExec;
+  unsigned long _pace; //time between executions
   bool _active;
 
 protected:
+  unsigned long _lastExec;
   virtual void work(long now) = 0;
 
 public:
   /**
   * pace gibt an nach wie vielen millis der Task wieder anspringen soll. 0 = immer
   */
-  Continual(byte id, long pace)
+  Continual(byte id, unsigned long pace)
     :Task(id), _pace(pace), _lastExec(0), _active(true)
     {
       
     };
 
 
-  void run(long currentTime)
+  void run(unsigned long currentTime)
   {
     if(!_active)
       return;
@@ -37,7 +37,7 @@ public:
     work(currentTime);
   }
 
-  inline void setPace(long pace) { _pace = pace; }
+  inline void setPace(unsigned long pace) { _pace = pace; }
 
   inline virtual void activate() { _active = true; }
 
