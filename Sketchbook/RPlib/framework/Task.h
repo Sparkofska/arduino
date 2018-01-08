@@ -7,7 +7,7 @@ private:
 	const byte _id;
 
 protected:
-  virtual void work(long now) = 0;
+  virtual void work(unsigned long now) = 0; // must be unsigned to avoid computation errors. Please take care of it in all Tasks
 
 public:
   Task(byte id):_id(id) { };
