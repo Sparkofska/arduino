@@ -8,10 +8,10 @@ class Continual : public Task
 {
 
 private:
-  unsigned long _pace; //time between executions
   bool _active;
 
 protected:
+  unsigned long _pace; //time between executions
   unsigned long _lastExec;
   virtual void work(long now) = 0;
 
@@ -33,8 +33,8 @@ public:
     if(currentTime - _lastExec < _pace)
       return;
 
-    _lastExec = currentTime;
     work(currentTime);
+    _lastExec = currentTime;
   }
 
   inline void setPace(unsigned long pace) { _pace = pace; }
