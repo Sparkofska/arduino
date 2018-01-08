@@ -12,7 +12,7 @@ protected:
 public:
   Task(byte id):_id(id) { };
 
-  virtual void run(long currentTime) =0;
+  virtual void run(unsigned long currentTime) =0;
 
   virtual void activate() =0;
 
