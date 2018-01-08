@@ -20,7 +20,7 @@ public:
   * pace gibt an nach wie vielen millis der Task wieder anspringen soll. 0 = immer
   */
   Continual(byte id, unsigned long pace)
-    :Task(id), _pace(pace), _lastExec(1), _active(true)
+    :Task(id), _pace(pace), _lastExec(0), _active(true)
     {
       
     };
