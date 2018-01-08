@@ -11,7 +11,7 @@ private:
   bool _active;
 
 protected:
-  virtual void work(long now) = 0;
+  virtual void work(unsigned long now) = 0;
 
 public:
   Once(byte id, bool active)
@@ -24,7 +24,7 @@ public:
     {
     };
 
-  void run(long currentTime)
+  void run(unsigned long currentTime)
   {
     if(! getActive())
       return;
